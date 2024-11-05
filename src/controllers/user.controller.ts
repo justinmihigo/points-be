@@ -8,7 +8,7 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
         const user = new User(req.body);
         await user.save();
         const token = jwt.sign({ userId: user._id }, '123', {
-            expiresIn: '3h'
+            expiresIn: '20h'
         })
         res.status(201).json({
             message: "User created successfully",
@@ -16,7 +16,7 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
         })
         console.log(token);
     } catch (error) {
-        res.status(500).json({error});
+        res.status(500).json({ error });
         console.log("error", error)
     }
 }
@@ -60,4 +60,24 @@ export const getUser = async (req: Request, res: Response): Promise<any> => {
     catch (error) {
         return res.status(500).json(error)
     }
+}
+
+export const updateUser = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const userId = req.params.id;
+        console.log(req.body);
+        const user = await User.findByIdAndUpdate({ _id: userId }, req.body, { new: true });
+        if (user) {
+            user.updatedAt = new Date();
+            user.save();
+            return res.status(200).json(user)
+        }
+        else{
+            return res.status(400).json({message: 'No user found'});
+        }
+        
+    } catch (error) {
+        return res.status(500).json(error)
+    }
+
 }
