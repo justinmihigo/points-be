@@ -16,6 +16,7 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
         })
         console.log(token);
     } catch (error) {
+        res.status(500).json({error});
         console.log("error", error)
     }
 }
