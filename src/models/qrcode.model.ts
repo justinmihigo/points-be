@@ -5,6 +5,7 @@ const QrcodeSchema = new Schema<IQrcode>({
     type: { type: String, default: 'registration' },
     name: { type: String, required: true },
     points: { type: Number, default: 500},
+    image:{type: String},
     dedicated: { type: String, default: 'active' },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

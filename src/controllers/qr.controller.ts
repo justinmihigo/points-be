@@ -14,20 +14,18 @@ export const createQrCode = async (req: Request, res: Response): Promise<any> =>
             cypherText = AES.encrypt(data as string, SECRET_KEY);
         }
         const qrcode = new QrCodeModel(req.body);
-        await qrcode.save();
-
-        const qrCode = await QRCode.toDataURL(qrcode._id.toString(),{
+        const qrCode = await QRCode.toDataURL(`https://bimaflow.apertacura.com/scan?id=${qrcode._id.toString()}`,{
             width: 600
         });
         const uploadedImage= await Cloudinary.uploader.upload(qrCode,{
             overwrite: true,
         });
-        // res.send(`<img src="${qrCode} "alt= "qrcode">`)
-        res.send(uploadedImage.secure_url);
-        // res.status(201).send().json({
-        //     message: "Qrcode created successfully",
-        //     qrcode,
-        // })
+        qrcode.image = uploadedImage.secure_url;
+        await qrcode.save();
+        res.status(200).json({
+            message: "Qrcode created successfully",
+            qrcode,
+        })
     } catch (error) {
         console.log("error", error);
     }
