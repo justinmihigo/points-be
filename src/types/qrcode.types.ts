@@ -1,5 +1,9 @@
 export interface IQrcode{
-    isScanned: boolean;
-    data?:string;
-    type: "registration" | "points";
+    name?:string;
+    points?:number;
+    dedicated?: string;
+    image?:string;
+    type?: string;
+    createdAt?:Date;
+    updatedAt?:Date;
 }
