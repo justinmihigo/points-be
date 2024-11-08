@@ -7,7 +7,7 @@ const UserSchema = new Schema<IUser>({
     email: { type: String},
     gender: {type: String},
     status: { type: String, default: "inactive" },
-    hasScanned: { type: Boolean, default: false },
+    hasScanned: { type: [String], default: [] },
     points: { type: Number, default: 0 },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },

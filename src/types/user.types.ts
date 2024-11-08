@@ -4,7 +4,7 @@ export interface IUser{
     email: string;
     gender: string;
     status: string;
-    hasScanned: boolean;
+    hasScanned: string[];
     points: number;
     createdAt: Date;
     updatedAt: Date;

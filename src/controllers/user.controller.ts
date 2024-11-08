@@ -24,12 +24,28 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
 export const getUsers = async (req: Request, res: Response): Promise<any> => {
 
     try {
-        const user = await User.find();
+        const user = await User.find().sort({points:'desc'});
         res.status(200).json({
             user
         })
     } catch (error) {
         console.log("error", error)
+    }
+}
+export const getTopUsers= async (req: Request, res: Response):Promise<any>=>{
+    try {
+        const users= await User.find().limit(10).sort({points:'desc'});
+        if(users){
+            res.status(200).json({
+                users
+            })
+        }
+        else{
+            res.status(404).json({ message: "No users found" });
+        }
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).json({error});
     }
 }
 export const getToken = async (req: Request, res: Response): Promise<any> => {
