@@ -5,6 +5,7 @@ export interface IUser{
     gender: string;
     status: string;
     hasScanned: string[];
+    favoriteActivity: string;
     points: number;
     createdAt: Date;
     updatedAt: Date;
