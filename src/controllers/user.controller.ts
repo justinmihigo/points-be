@@ -24,12 +24,66 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
 export const getUsers = async (req: Request, res: Response): Promise<any> => {
 
     try {
-        const user = await User.find();
+        const userActive = await User.aggregate([
+            {
+                $sort: { points: -1 }
+            },
+            {
+                $match:{
+                    status:"active",
+                }
+            },
+            {
+                $group: {
+                    _id: { gender: "$gender" },
+                    users: { $push: { fullname: "$fullname", points: "$points", gender:"$gender", status:"$status" } }
+                }
+            },
+            {
+                $limit: 3
+            }
+        
+        ]);
+            const UserInactive= await User.aggregate([ {
+                $sort: { points: -1 }
+            },
+            {
+                $match:{
+                    status:"inactive",
+                }
+            },
+            {
+                $group: {
+                    _id: { gender: "$gender" },
+                    users: { $push: { fullname: "$fullname", points: "$points", gender:"$gender", status:"$status" } }
+                },
+            },
+            {
+                $limit: 3
+            }
+        ]);
         res.status(200).json({
-            user
+            activeUsers: userActive,
+            inactiveUsers: UserInactive
         })
     } catch (error) {
         console.log("error", error)
+    }
+}
+export const getTopUsers = async (req: Request, res: Response): Promise<any> => {
+    try {
+        const users = await User.find().limit(10).sort({ points: 'desc' });
+        if (users) {
+            res.status(200).json({
+                users
+            })
+        }
+        else {
+            res.status(404).json({ message: "No users found" });
+        }
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).json({ error });
     }
 }
 export const getToken = async (req: Request, res: Response): Promise<any> => {
@@ -72,10 +126,10 @@ export const updateUser = async (req: Request, res: Response): Promise<any> => {
             user.save();
             return res.status(200).json(user)
         }
-        else{
-            return res.status(400).json({message: 'No user found'});
+        else {
+            return res.status(400).json({ message: 'No user found' });
         }
-        
+
     } catch (error) {
         return res.status(500).json(error)
     }
