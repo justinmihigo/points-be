@@ -70,6 +70,15 @@ export const getUsers = async (req: Request, res: Response): Promise<any> => {
         console.log("error", error)
     }
 }
+export const getAllUsers= async(req:Request, res:Response):Promise<any>=>{
+    try {
+        const users = await User.find().sort({points:'desc'});
+        res.status(200).json(users);
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).json({ error });
+    }
+}
 export const getTopUsers = async (req: Request, res: Response): Promise<any> => {
     try {
         const users = await User.find().limit(10).sort({ points: 'desc' });
